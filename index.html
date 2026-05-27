@@ -82,7 +82,7 @@
   #balloon-area {
     position: fixed;
     inset: 0;
-    z-index: 20;
+    z-index: 999;
     pointer-events: none;
   }
   .balloon {
@@ -94,7 +94,7 @@
     user-select: none;
     filter: drop-shadow(0 0 10px rgba(255,150,200,0.5));
   }
-  .balloon svg { display: block; }
+  .balloon svg { display: block; pointer-events: none; }
   @keyframes rise {
     from { transform: translateY(0) rotate(var(--r,0deg)); }
     to   { transform: translateY(calc(-100vh - 200px)) rotate(var(--r2,5deg)); }
@@ -564,7 +564,10 @@ function makeBalloon() {
     <line x1="32" y1="62" x2="34" y2="68" stroke="${c}" stroke-width="1" opacity="0.5"/>
   </svg>`;
 
-  b.addEventListener('click', () => popBalloon(b, c));
+  b.addEventListener('click', (e) => { e.stopPropagation(); popBalloon(b, c); });
+  b.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); popBalloon(b, c); });
+  b.style.cursor = 'pointer';
+  b.style.zIndex = '50';
   balloonArea.appendChild(b);
   totalBalloons++;
 }
